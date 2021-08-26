@@ -11,7 +11,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from statannot import add_stat_annotation
+from statannot.statannot import add_stat_annotation
 
 # Setings
 # Root where the data are stored
@@ -93,8 +93,8 @@ ax.set_xticklabels(N_S_list)
 box_list = [((N_S, 0), (N_S,1)) for N_S in N_S_list]
 
 add_stat_annotation(ax, data = df, x = "Subject", y = "Test Accuracy [%]",  hue = "Random Label",
-                    boxPairList = box_list, test = 'Mann-Whitney', textFormat = 'star', loc = 'inside', 
-                    verbose=1, stack = False, pvalueThresholds = [[1,"ns"], [0.01,"*"]])
+                    box_pairs = box_list, test = 'Mann-Whitney', text_format = 'star', loc = 'inside', 
+                    verbose=1, pvalue_thresholds = [[1,"ns"], [0.01,"*"]])
 
 if save_plot:
     # File name for saving

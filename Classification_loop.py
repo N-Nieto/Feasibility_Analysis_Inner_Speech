@@ -22,16 +22,15 @@ from Relevance_Based_Pruning.Python_Implementation.RBP_Utilitys import RBP
 
 from Inner_Speech_Dataset.Python_Processing.Utilitys import Ensure_dir
 from Inner_Speech_Dataset.Python_Processing.Data_extractions import  Extract_data_from_subject
-from Clasification_Utilitys import randomize_trials, ELM_labels
 from Inner_Speech_Dataset.Python_Processing.Data_processing import  Select_time_window, Transform_for_classificator 
 
-
-
+from Clasification_Utilitys import randomize_trials, ELM_labels
+mne.set_log_level('CRITICAL')
 # In[]
 # # o ----------------- o ----------------- o ----------------- o ----------------- o ----------------- o
 # Root where the data are stored
-root_dir='../'
-save_dir="../Results/"
+root_dir='/media/nnieto/50e793fa-4717-4997-b590-b4167be63ee7/home/nnieto/Escritorio/Nico/Doctorado/Tesis/LIAA - sinc(i)/Toma de datos/Inner Speech Dataset'
+save_dir="../Results Delete/"
 
 # Subjets
 N_S_list=[1,2,3,4,5,6,7,8,9,10]
