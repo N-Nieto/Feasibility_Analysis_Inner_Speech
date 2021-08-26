@@ -1,0 +1,16 @@
+name: inner_speech_pre
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8.6
+  - pip
+  - git
+  - mne
+  - seaborn
+  - matplotlib
+  - numpy
+  - spyder
+  - pip:
+     - pickle-mixin
+
