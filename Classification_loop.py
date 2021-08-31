@@ -5,7 +5,7 @@ Created on Tue Jun  8 02:09:39 2021
 
 @author: Nieto Nicolás - nnieto@sinc.unl.edu.ar
 """
-
+import warnings
 import timeit
 import numpy as np
 import mne
@@ -26,6 +26,8 @@ from Inner_Speech_Dataset.Python_Processing.Data_processing import  Select_time_
 
 from Clasification_Utilitys import randomize_trials, ELM_labels
 mne.set_log_level('CRITICAL')
+
+warnings.filterwarnings(action= "ignore", category = DeprecationWarning ) 
 # In[]
 # # o ----------------- o ----------------- o ----------------- o ----------------- o ----------------- o
 # Root where the data are stored
@@ -207,19 +209,26 @@ for N_S in N_S_list :
                     # Initialization
                     acc_val_full=0
                     
-                    W_full , b_full = rbp.generate_rand_network(Data_train_full, np.max(M_search))            
-                    # Fitting with pinv2
-                    B_full = rbp.fit(x=Data_train_full,W=W_full,b=b_full,y=Y_trn,Reg=Reg)
+                    W , b = rbp.generate_rand_network(Data_train_full, np.max(M_search))    
+                    
+                    H_full = rbp.generate_H(Data_train_full, W, b)
+                    
+                    H_val_full = rbp.generate_H(Data_val_full, W, b)
+                    
+                    # Fitting with pinv
+                    B_full = rbp.fit(Y_trn, H = H_full, Reg=Reg)
                     
                     # Relevance Based Pruning
                     for nodes in M_search: 
-                        W, b, B  = rbp.fix_prunning(W_full, b_full, B_full, prn_perc=nodes, mode="keep")
+                        
+                        B_prun, H_prun, H_val  = rbp.Relevance_based_pruning(B_full, prn_perc = nodes, H = H_full, H_test = H_val_full)
+                        
                         # Make a prediction with the pruned netwokr                       
-                        y_pred = rbp.predict(Data_val_full, W, b, B)
+                        y_pred = rbp.predict(B_prun, H = H_val)
                         
-                        acc_val = accuracy_score(Y_val,y_pred)
+                        acc_val = accuracy_score(Y_val, y_pred)
                         
-                        acc_val_full= np.append(acc_val_full,acc_val)
+                        acc_val_full= np.append(acc_val_full, acc_val)
                         
                     # Delet initialization
                     acc_val_full = np.delete(acc_val_full,0)
@@ -296,11 +305,15 @@ for N_S in N_S_list :
             # Generate the new network
             W , b = rbp.generate_rand_network(Data_train_full, Best_M)
             
+            H_full = rbp.generate_H(Data_train_full, W, b)
+            
+            H_test = rbp.generate_H(Data_test_full, W, b)
+            
             # Fitting with all the available training data
-            B = rbp.fit(x = Data_train_full, W = W, b = b, y = Y_train, Reg = Reg)
+            B = rbp.fit(Y_train, H = H_full, Reg=Reg)
             
             # get test prediction
-            y_pred = rbp.predict(Data_test_full, W, b, B)
+            y_pred = rbp.predict(B , H = H_test)
             
             # Compute test accuracy
             acc_test = accuracy_score(Y_test,y_pred)
