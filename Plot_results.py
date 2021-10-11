@@ -15,7 +15,7 @@ from statannot.statannot import add_stat_annotation
 
 # Setings
 # Root where the data are stored
-root_dir="../Results2/"
+root_dir="../Results/"
 
 # Subjets
 N_S_list=[1,2,3,4,5,6,7,8,9,10]
