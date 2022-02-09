@@ -15,9 +15,7 @@ from mne.decoding import CSP
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedShuffleSplit
-
-   
-         
+  
 from Relevance_Based_Pruning.Python_Implementation.RBP_Utilitys import RBP
 
 from Inner_Speech_Dataset.Python_Processing.Utilitys import Ensure_dir
@@ -31,26 +29,26 @@ warnings.filterwarnings(action= "ignore", category = DeprecationWarning )
 # In[]
 # # o ----------------- o ----------------- o ----------------- o ----------------- o ----------------- o
 # Root where the data are stored
-root_dir='/media/nnieto/50e793fa-4717-4997-b590-b4167be63ee7/home/nnieto/Escritorio/Nico/Doctorado/Tesis/LIAA - sinc(i)/Toma de datos/Inner Speech Dataset'
-save_dir="../Results Delete/"
+root_dir = '../'
+save_dir = "../Results/"
 
 # Subjets
-N_S_list=[1,2,3,4,5,6,7,8,9,10]
+N_S_list = [1,2,3,4,5,6,7,8,9,10]
 
 # Data Parameters
-datatype="EEG"
+datatype = "EEG"
 # Compared conditions
-Conditions=[["Pron"],["Inner"]]
+Conditions = [["Pron"],["Inner"]]
 # Use all classes regardless of the class label
-Classes=[["All"],["All"]]
+Classes = [["All"],["All"]]
 
 # Signal processing-----------------------------------------------------------
 # Time cut (seg)
-fs=254
-t_start=1.5
-t_end=3.5
+fs = 254
+t_start = 1.5
+t_end = 3.5
 # Features Generation ---------------------------------------------------------
-channels_list=["all"]
+channels_list = ["all"]
 
 # Filter signal band = [low_band , high_band, "band_name"]
 # =============================================================================
@@ -104,12 +102,12 @@ random_state = 23
 np.random.seed(random_state)
 
 # 20 cross validations between train and test
-str_cv= StratifiedShuffleSplit(k_folds,test_size=test_size,random_state=random_state)
+str_cv = StratifiedShuffleSplit(k_folds,test_size=test_size,random_state=random_state)
 
 # 3 cros validations for hyperparameter search
-val_cv= StratifiedShuffleSplit(val_fold,test_size=val_size,random_state=random_state)
+val_cv = StratifiedShuffleSplit(val_fold,test_size=val_size,random_state=random_state)
 
-scaler= MinMaxScaler()
+scaler = MinMaxScaler()
 
 rbp = RBP()
 
@@ -131,7 +129,7 @@ for N_S in N_S_list :
     X , Y =  Transform_for_classificator(X, Y, Classes, Conditions)
     
     stop = timeit.default_timer()
-    tim= stop - start
+    tim = stop - start
     print("Load Time = "+ str(tim))
 
 
@@ -147,17 +145,17 @@ for N_S in N_S_list :
         # In[] Cros validation
     
         cv = 0
-        Data_train_full=[]
-        Data_test_full=[]    
+        Data_train_full = []
+        Data_test_full = []    
         
-        for train_index, test_index in str_cv.split(X=X_t,y=Y_t):
+        for train_index, test_index in str_cv.split(X = X_t, y = Y_t):
             print("Cross Validation: " +str(cv+1) +"/"+str(k_folds))
             Y_train =  Y_t[train_index]
             Y_test = Y_t[test_index]
             X_train = X_t[train_index]
             
             # In[]  Validation loop
-            for train_index_val, val_index in val_cv.split(X=X_train,y=Y_train):
+            for train_index_val, val_index in val_cv.split(X = X_train, y = Y_train):
                 
                 Y_trn = Y_train[train_index_val]
                 Y_val = Y_train[val_index]
@@ -184,7 +182,7 @@ for N_S in N_S_list :
                     Data_val = csp.transform(Data_val)
                                        
                     # Stack features
-                    if n_band==0:
+                    if n_band == 0:
                         Data_train_full = Data_train
                         Data_val_full = Data_val
                     else: 
@@ -198,16 +196,16 @@ for N_S in N_S_list :
            
                 Data_train_full = scaler.fit_transform(Data_train_full)
                 
-                Data_val_full= scaler.transform(Data_val_full)
+                Data_val_full = scaler.transform(Data_val_full)
                     
                 # In[] Finding the best number of hidden nodes M
                
             
                 # W and b initializations
-                for w in range (W_iter):
+                for w in range(W_iter):
                     
                     # Initialization
-                    acc_val_full=0
+                    acc_val_full = 0
                     
                     W , b = rbp.generate_rand_network(Data_train_full, np.max(M_search))    
                     
@@ -228,7 +226,7 @@ for N_S in N_S_list :
                         
                         acc_val = accuracy_score(Y_val, y_pred)
                         
-                        acc_val_full= np.append(acc_val_full, acc_val)
+                        acc_val_full = np.append(acc_val_full, acc_val)
                         
                     # Delet initialization
                     acc_val_full = np.delete(acc_val_full,0)
@@ -241,10 +239,10 @@ for N_S in N_S_list :
                     
                     # Acumulate the results for differents initializations of W
                     if w == 0:
-                        acc_max_w= acc_max
+                        acc_max_w = acc_max
                         pos_w = pos
                     else:
-                        acc_max_w= np.vstack([acc_max_w, acc_max])
+                        acc_max_w = np.vstack([acc_max_w, acc_max])
                         pos_w = np.vstack([pos_w, pos])
         
                 # Acumulate results for differents Cross validations
@@ -260,8 +258,6 @@ for N_S in N_S_list :
             # End of validation Loop. 
             # Get the best number of nodes as the mean of the different pos
             Best_M = M_search[int(round(np.mean(POS_MAX)))]
-            
-
             
             # In[] Final clasification
             
