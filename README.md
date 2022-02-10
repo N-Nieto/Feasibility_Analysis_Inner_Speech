@@ -8,11 +8,11 @@ We found that it is possible to distinguis the EEG signals from the different co
 
 The following figure shows the results of the classification for all the available subjects in the Inner speech vs Visualized Condition comparison.
 
-<img src="images/Result_Inner_vs_Vis.pdf" width="800">
+<img src="images/Result_Inner_vs_Vis.png" width="800">
 
 On the other hand, the second figure shows the results of the classification for all the available subjects in the Inner speech vs Pronounced speech comparison.
 
-<img src="images/Result_Inner_vs_Pron.pdf" width="800">
+<img src="images/Result_Inner_vs_Pron.png" width="800">
 
 To ensure reproducibility, all the codes used in this work, along with the enviroment used, is presented in this repository.
 
