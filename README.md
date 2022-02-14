@@ -1,6 +1,6 @@
 # Feasibility_Analysis_Inner_Speech
 
-We classify the EEG signals for the different conditions: Inner speech vs Pronounced speech and Inner speech vs Visualized Condition using the "Inner Speech Dataset" publicly available at https://openneuro.org/datasets/ds003626.
+We classify the EEG signals for the different conditions: Inner speech vs Pronounced speech and Inner speech vs Visualized Condition using the "Inner Speech Dataset" publicly available at https://openneuro.org/datasets/ds003626, and presented https://doi.org/10.1038/s41597-022-01147-2. 
 
 We use the implementation of a Relevance-Based Pruned Extreme Learning Machine, proposed in https://rdcu.be/cyFP3, available at https://github.com/N-Nieto/Relevance_Based_Pruning.
 
